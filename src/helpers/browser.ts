@@ -1,7 +1,7 @@
 import puppeteer, {
   Browser,
-  LaunchOptions,
-  RevisionInfo,
+  PuppeteerNodeLaunchOptions,
+  BrowserFetcherRevisionInfo,
 } from 'puppeteer-core';
 import {
   launch,
@@ -32,7 +32,9 @@ const getLocalRevisionList = (): Promise<string[]> => {
   return installer.getBrowserFetcher().localRevisions();
 };
 
-const getLocalRevisionInfo = async (): Promise<RevisionInfo | undefined> => {
+const getLocalRevisionInfo = async (): Promise<
+  BrowserFetcherRevisionInfo | undefined
+> => {
   if (isPreferredBrowserRevisionInstalled()) {
     return installer.getPreferredBrowserRevisionInfo();
   }
@@ -48,10 +50,10 @@ const getLocalRevisionInfo = async (): Promise<RevisionInfo | undefined> => {
 };
 
 const getLocalBrowserInstance = async (
-  launchArgs: LaunchOptions,
+  launchArgs: PuppeteerNodeLaunchOptions,
   noSandbox: boolean,
 ): Promise<Browser> => {
-  let revisionInfo: RevisionInfo;
+  let revisionInfo: BrowserFetcherRevisionInfo;
   const localRevisionInfo = await getLocalRevisionInfo();
 
   if (localRevisionInfo) {
@@ -104,7 +106,7 @@ const getLaunchedChromeVersionInfo = (
 
 const getSystemBrowserInstance = async (
   chrome: LaunchedChrome,
-  launchArgs?: LaunchOptions,
+  launchArgs?: PuppeteerNodeLaunchOptions,
 ): Promise<Browser> => {
   const chromeVersionInfo = await getLaunchedChromeVersionInfo(chrome);
 
@@ -115,7 +117,7 @@ const getSystemBrowserInstance = async (
 };
 
 const getBrowserInstance = async (
-  launchArgs: LaunchOptions,
+  launchArgs: PuppeteerNodeLaunchOptions,
   noSandbox: boolean,
 ): Promise<{ chrome: LaunchedChrome | undefined; browser: Browser }> => {
   const LAUNCHER_CONNECTION_REFUSED_ERROR_CODE = 'ECONNREFUSED';
